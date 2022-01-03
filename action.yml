@@ -32,6 +32,7 @@ runs:
     
     - name: Enable git support for long paths on Windows
       if: ${{ runner.os == 'Windows' }}
+      shell: cmd
       run: git config --system core.longpaths true
         
     - name: Restore m2 repository
@@ -58,6 +59,7 @@ runs:
         
     - name: Setup git user
       if: inputs.BUILD_USER != '' && inputs.BUILD_USER_EMAIL != ''
+      shell: bash
       run: |
         git config --global user.email ${{ inputs.BUILD_USER_EMAIL }}
         git config --global user.name ${{ inputs.BUILD_USER }}
@@ -76,5 +78,6 @@ runs:
         fi
         
     - name: Clone Repository
-      if: input.clone
+      if: inputs.clone
+      shell: bash
       uses: actions/checkout@v2
