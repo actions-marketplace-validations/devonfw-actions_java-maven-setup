@@ -4,6 +4,9 @@ inputs:
   maven-cache-key:
     description: 'Cache key for maven repository'
     required: false
+  maven-cache-restore-key:
+    description: 'Cache restore key for maven repository'
+    required: false
   java-version:
     description: 'Java version to setup'
     required: false
@@ -41,6 +44,7 @@ runs:
       with:
         path: ~/.m2/repository
         key: ${{ inputs.maven-cache-key }}
+        restore-keys: ${{ inputs.maven-cache-restore-key }}
 
     - name: Set up OpenJDK
       if: inputs.java-version != ''
