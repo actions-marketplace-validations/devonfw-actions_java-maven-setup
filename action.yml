@@ -80,4 +80,6 @@ runs:
           echo "Changed remote URL to enable pushing on protected branch"
         fi
         
-    - uses: actions/checkout@v2
+    - name: Clone Repository
+      if: input.clone
+      uses: actions/checkout@v2
