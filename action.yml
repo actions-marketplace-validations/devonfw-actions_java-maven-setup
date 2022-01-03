@@ -10,7 +10,7 @@ inputs:
   clone:
     description: 'Wheather to clone the repository as part of the composite action'
     required: false
-    default: true:
+    default: true
   GPG_PRIVATE_KEY:
     required: false
   GPG_PASSPHRASE:
