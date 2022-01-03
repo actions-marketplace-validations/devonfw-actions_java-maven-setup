@@ -10,8 +10,7 @@ inputs:
   clone:
     description: 'Wheather to clone the repository as part of the composite action'
     required: false
-    default: true
-secrets:
+    default: true:
   GPG_PRIVATE_KEY:
     required: false
   GPG_PASSPHRASE:
@@ -26,9 +25,9 @@ secrets:
 runs:
   using: "composite"
   env: 
-      BUILD_USER: ${{ secrets.BUILD_USER }}
-      BUILD_USER_PASSWD: ${{ secrets.BUILD_USER_PASSWD }}
-      BUILD_USER_EMAIL: ${{ secrets.BUILD_USER_EMAIL }}
+      BUILD_USER: ${{ inputs.BUILD_USER }}
+      BUILD_USER_PASSWD: ${{ inputs.BUILD_USER_PASSWD }}
+      BUILD_USER_EMAIL: ${{ inputs.BUILD_USER_EMAIL }}
   steps:
     - name: "Use GNU tar instead BSD tar (Workaround https://github.com/actions/cache/issues/576#issuecomment-830796954)"
       if: ${{ runner.os == 'Windows' }}
@@ -54,21 +53,21 @@ runs:
 
     - name: Import GPG key
       uses: crazy-max/ghaction-import-gpg@v4
-      if: secrets.GPG_PRIVATE_KEY != '' && secrets.GPG_PASSPHRASE != ''
+      if: inputs.GPG_PRIVATE_KEY != '' && inputs.GPG_PASSPHRASE != ''
       with:
-        gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
-        passphrase: ${{ secrets.GPG_PASSPHRASE }}
+        gpg_private_key: ${{ inputs.GPG_PRIVATE_KEY }}
+        passphrase: ${{ inputs.GPG_PASSPHRASE }}
         git_user_signingkey: true
         git_commit_gpgsign: true
         
     - name: Setup git user
-      if: secrets.BUILD_USER != '' && secrets.BUILD_USER_EMAIL != ''
+      if: inputs.BUILD_USER != '' && inputs.BUILD_USER_EMAIL != ''
       run: |
         git config --global user.email ${BUILD_USER_EMAIL}
         git config --global user.name ${BUILD_USER}
         
     - name: Setup repo for push on protected branch
-      if: secrets.BUILD_USER != '' && secrets.BUILD_USER_PASSWD != ''
+      if: inputs.BUILD_USER != '' && inputs.BUILD_USER_PASSWD != ''
       shell: bash
       run: |
         ORIGIN="$(git config --get remote.origin.url)"
