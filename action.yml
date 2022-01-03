@@ -7,6 +7,10 @@ inputs:
   java-version:
     description: 'Java version to setup'
     required: false
+  clone:
+    description: 'Wheather to clone the repository as part of the composite action'
+    required: false
+    default: true
 secrets:
   GPG_PRIVATE_KEY:
     required: false
