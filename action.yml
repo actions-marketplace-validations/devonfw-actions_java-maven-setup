@@ -79,5 +79,4 @@ runs:
         
     - name: Clone Repository
       if: inputs.clone
-      shell: bash
       uses: actions/checkout@v2
