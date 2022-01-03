@@ -1,0 +1,79 @@
+name: 'Checkout and Prepare Step'
+description: 'Apply workarounds + Java Setup + Maven Repository Caching'
+inputs:
+  maven-cache-key:
+    description: 'Cache key for maven repository'
+    required: false
+  java-version:
+    description: 'Java version to setup'
+    required: false
+secrets:
+  GPG_PRIVATE_KEY:
+    required: false
+  GPG_PASSPHRASE:
+    required: false
+  BUILD_USER:
+    required: false
+  BUILD_USER_PASSWD:
+    required: false
+  BUILD_USER_EMAIL:
+    required: false
+
+runs:
+  using: "composite"
+  env: 
+      BUILD_USER: ${{ secrets.BUILD_USER }}
+      BUILD_USER_PASSWD: ${{ secrets.BUILD_USER_PASSWD }}
+      BUILD_USER_EMAIL: ${{ secrets.BUILD_USER_EMAIL }}
+  steps:
+    - name: "Use GNU tar instead BSD tar (Workaround https://github.com/actions/cache/issues/576#issuecomment-830796954)"
+      if: ${{ runner.os == 'Windows' }}
+      shell: cmd
+      run: echo C:\Program Files\Git\usr\bin>>"%GITHUB_PATH%"
+    
+    - name: Enable git support for long paths on Windows
+      if: ${{ runner.os == 'Windows' }}
+      run: git config --system core.longpaths true
+        
+    - name: Restore m2 repository
+      if: inputs.maven-cache-key != ''
+      uses: actions/cache@v2
+      with:
+        path: ~/.m2/repository
+        key: ${{ inputs.maven-cache-key }}
+
+    - name: Set up OpenJDK
+      if: inputs.java-version != ''
+      uses: actions/setup-java@v1
+      with:
+        java-version: ${{ inputs.java-version }}
+
+    - name: Import GPG key
+      uses: crazy-max/ghaction-import-gpg@v4
+      if: secrets.GPG_PRIVATE_KEY != '' && secrets.GPG_PASSPHRASE != ''
+      with:
+        gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
+        passphrase: ${{ secrets.GPG_PASSPHRASE }}
+        git_user_signingkey: true
+        git_commit_gpgsign: true
+        
+    - name: Setup git user
+      if: secrets.BUILD_USER != '' && secrets.BUILD_USER_EMAIL != ''
+      run: |
+        git config --global user.email ${BUILD_USER_EMAIL}
+        git config --global user.name ${BUILD_USER}
+        
+    - name: Setup repo for push on protected branch
+      if: secrets.BUILD_USER != '' && secrets.BUILD_USER_PASSWD != ''
+      shell: bash
+      run: |
+        ORIGIN="$(git config --get remote.origin.url)"
+        SED_OUT=$(echo $ORIGIN | sed -r -E -n 's@^https:\/\/(github.com.*)@\1@p')
+        if [ -n "$SED_OUT" ]
+        then
+          ORIGIN="https://${BUILD_USER}:${BUILD_USER_PASSWD}@$SED_OUT"
+          git remote set-url origin $ORIGIN
+          echo "Changed remote URL to enable pushing on protected branch"
+        fi
+        
+    - uses: actions/checkout@v2
