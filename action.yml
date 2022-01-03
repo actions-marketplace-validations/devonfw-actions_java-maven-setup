@@ -24,10 +24,6 @@ inputs:
 
 runs:
   using: "composite"
-  env: 
-      BUILD_USER: ${{ inputs.BUILD_USER }}
-      BUILD_USER_PASSWD: ${{ inputs.BUILD_USER_PASSWD }}
-      BUILD_USER_EMAIL: ${{ inputs.BUILD_USER_EMAIL }}
   steps:
     - name: "Use GNU tar instead BSD tar (Workaround https://github.com/actions/cache/issues/576#issuecomment-830796954)"
       if: ${{ runner.os == 'Windows' }}
@@ -63,8 +59,8 @@ runs:
     - name: Setup git user
       if: inputs.BUILD_USER != '' && inputs.BUILD_USER_EMAIL != ''
       run: |
-        git config --global user.email ${BUILD_USER_EMAIL}
-        git config --global user.name ${BUILD_USER}
+        git config --global user.email ${{ inputs.BUILD_USER_EMAIL }}
+        git config --global user.name ${{ inputs.BUILD_USER }}
         
     - name: Setup repo for push on protected branch
       if: inputs.BUILD_USER != '' && inputs.BUILD_USER_PASSWD != ''
@@ -74,7 +70,7 @@ runs:
         SED_OUT=$(echo $ORIGIN | sed -r -E -n 's@^https:\/\/(github.com.*)@\1@p')
         if [ -n "$SED_OUT" ]
         then
-          ORIGIN="https://${BUILD_USER}:${BUILD_USER_PASSWD}@$SED_OUT"
+          ORIGIN="https://${{ inputs.BUILD_USER }}:${{ inputs.BUILD_USER_PASSWD }}@$SED_OUT"
           git remote set-url origin $ORIGIN
           echo "Changed remote URL to enable pushing on protected branch"
         fi
