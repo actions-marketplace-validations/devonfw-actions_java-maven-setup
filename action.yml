@@ -51,6 +51,10 @@ runs:
       uses: actions/setup-java@v1
       with:
         java-version: ${{ inputs.java-version }}
+    
+    - name: Clone Repository
+      if: inputs.clone
+      uses: actions/checkout@v2
 
     - name: Import GPG key
       uses: crazy-max/ghaction-import-gpg@v4
@@ -80,7 +84,3 @@ runs:
           git remote set-url origin $ORIGIN
           echo "Changed remote URL to enable pushing on protected branch"
         fi
-        
-    - name: Clone Repository
-      if: inputs.clone
-      uses: actions/checkout@v2
