@@ -53,7 +53,7 @@ runs:
         java-version: ${{ inputs.java-version }}
     
     - name: Clone Repository
-      if: inputs.clone
+      if: inputs.clone == 'true'
       uses: actions/checkout@v2
 
     - name: Import GPG key
