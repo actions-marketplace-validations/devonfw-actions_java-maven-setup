@@ -10,6 +10,10 @@ inputs:
   java-version:
     description: 'Java version to setup'
     required: false
+  repository_path:
+    description: 'Path to clone the repository to'
+    required: false
+    default: .
   clone:
     description: 'Wheather to clone the repository as part of the composite action'
     required: false
@@ -55,6 +59,8 @@ runs:
     - name: Clone Repository
       if: inputs.clone == 'true'
       uses: actions/checkout@v2
+      with:
+        path: inputs.repository_path
 
     - name: Import GPG key
       uses: crazy-max/ghaction-import-gpg@v4
@@ -64,11 +70,13 @@ runs:
         passphrase: ${{ inputs.GPG_PASSPHRASE }}
         git_user_signingkey: true
         git_commit_gpgsign: true
+        workdir: inputs.repository_path
         
     - name: Setup git user
       if: inputs.BUILD_USER != '' && inputs.BUILD_USER_EMAIL != ''
       shell: bash
       run: |
+        cd ${{ inputs.repository_path }}
         git config --global user.email ${{ inputs.BUILD_USER_EMAIL }}
         git config --global user.name ${{ inputs.BUILD_USER }}
         
@@ -76,6 +84,7 @@ runs:
       if: inputs.BUILD_USER != '' && inputs.BUILD_USER_PASSWD != ''
       shell: bash
       run: |
+        cd ${{ inputs.repository_path }}
         ORIGIN="$(git config --get remote.origin.url)"
         SED_OUT=$(echo $ORIGIN | sed -r -E -n 's@^https:\/\/(github.com.*)@\1@p')
         if [ -n "$SED_OUT" ]
