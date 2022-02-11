@@ -60,7 +60,7 @@ runs:
       if: inputs.clone == 'true'
       uses: actions/checkout@v2
       with:
-        path: inputs.repository_path
+        path: ${{ inputs.repository_path }}
 
     - name: Import GPG key
       uses: crazy-max/ghaction-import-gpg@v4
@@ -70,7 +70,7 @@ runs:
         passphrase: ${{ inputs.GPG_PASSPHRASE }}
         git_user_signingkey: true
         git_commit_gpgsign: true
-        workdir: inputs.repository_path
+        workdir: ${{ inputs.repository_path }}
         
     - name: Setup git user
       if: inputs.BUILD_USER != '' && inputs.BUILD_USER_EMAIL != ''
