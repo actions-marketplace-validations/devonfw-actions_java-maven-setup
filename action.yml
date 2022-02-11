@@ -18,6 +18,10 @@ inputs:
     desciption: 'Repository to clone, by default ${{ github.repository }}'
     required: false
     default: ${{ github.repository }}
+  git_token:
+    description: 'GitHub actions token for repository cloning defaults to ${{ github.token }}'
+    required: false
+    default: ${{ github.token }}
   clone:
     description: 'Wheather to clone the repository as part of the composite action, defaulted to true'
     required: false
@@ -66,6 +70,7 @@ runs:
       with:
         repository: ${{ inputs.repository }}
         path: ${{ inputs.repository_path }}
+        token: ${{ intputs.git_token }}
 
     - name: Import GPG key
       uses: crazy-max/ghaction-import-gpg@v4
