@@ -18,10 +18,6 @@ inputs:
     desciption: 'Repository to clone, by default ${{ github.repository }}'
     required: false
     default: ${{ github.repository }}
-  git_token:
-    description: 'GitHub actions token for repository cloning defaults to ${{ github.token }}'
-    required: false
-    default: ${{ github.token }}
   clone:
     description: 'Wheather to clone the repository as part of the composite action, defaulted to true'
     required: false
@@ -36,6 +32,10 @@ inputs:
     required: false
   BUILD_USER_EMAIL:
     required: false
+  GIT_TOKEN:
+    description: 'GitHub actions token for repository cloning defaults to ${{ github.token }}'
+    required: false
+    default: ${{ github.token }}
 
 runs:
   using: "composite"
