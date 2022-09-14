@@ -7,6 +7,12 @@ inputs:
   maven-cache-restore-key:
     description: 'Cache restore key for maven repository'
     required: false
+  jacoco-cache-key:
+    description: 'Cache key for jacoco and test execution data'
+    required: false
+  jacoco-cache-restore-key:
+    description: 'Cache restore key for jacoco and test execution data'
+    required: false
   java-version:
     description: 'Java version to setup'
     required: false
@@ -57,6 +63,18 @@ runs:
         path: ~/.m2/repository
         key: ${{ inputs.maven-cache-key }}
         restore-keys: ${{ inputs.maven-cache-restore-key }}
+        
+    - name: Restore jacoco test coverage data
+      if: inputs.jacoco-cache-key != ''
+      uses: actions/cache@v2
+      with:
+        path: |
+          ./**/*.exec
+          ./**/failsafe-reports/**
+          ./**/surefire-reports/**
+          
+        key: ${{ inputs.jacoco-cache-key }}
+        restore-keys: ${{ inputs.jacoco-cache-restore-key }}
 
     - name: Set up OpenJDK
       if: inputs.java-version != ''
