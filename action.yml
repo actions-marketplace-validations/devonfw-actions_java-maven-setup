@@ -72,7 +72,6 @@ runs:
           ./**/*.exec
           ./**/failsafe-reports/**
           ./**/surefire-reports/**
-          
         key: ${{ inputs.jacoco-cache-key }}
         restore-keys: ${{ inputs.jacoco-cache-restore-key }}
 
