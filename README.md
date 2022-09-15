@@ -5,6 +5,7 @@ Features and their parameters:
 | Feature  | Parameters to be set/for control  | Reference | Comment |
 |---|---|---|---|
 | Caching of maven repository (optional)  | maven-cache-key (actions/cache>key)<br />maven-cache-restore-key (actions/cache>restore-key)  | [actions/cache@v2](https://github.com/actions/cache/blob/main/examples.md#java---maven)  | |
+| Caching of jacoco test coverage data (optional)  | jacoco-cache-key (actions/cache>key)<br />jacoco-cache-restore-key (actions/cache>restore-key)  | [actions/cache@v2](https://github.com/actions/cache/)  | |
 | Switching Java version (optional)  | java-version  | [actions/setup-java@v1](https://github.com/actions/setup-java#supported-version-syntax)  | |
 | Setting up GPG signing (optional)  | GPG_PRIVATE_KEY<br />GPG_PASSPHRASE  | [crazy-max/ghaction-import-gpg@v4](https://github.com/devonfw-actions/java-maven-setup/blob/main/action.yml#L55)  |   |
 | Prepare commit to protected branches (optional)  | BUILD_USER<br />BUILD_USER_PASSWD<br />BUILD_USER_EMAIL  |   | To be able to finally push afterwards to the repository. You have to disable default github actions authentication header. See an example [here](https://github.com/devonfw/cobigen/blob/eb8519c4dd69b307dd1e669eeab0bfba59c1c1a1/release.sh#L171) |
