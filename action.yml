@@ -58,7 +58,7 @@ runs:
         
     - name: Restore m2 repository
       if: inputs.maven-cache-key != ''
-      uses: actions/cache@v2
+      uses: actions/cache@v3
       with:
         path: ~/.m2/repository
         key: ${{ inputs.maven-cache-key }}
@@ -66,12 +66,12 @@ runs:
         
     - name: Restore jacoco test coverage data
       if: inputs.jacoco-cache-key != ''
-      uses: actions/cache@v2
+      uses: actions/cache@v3
       with:
         path: |
-          ./**/*.exec
-          ./**/failsafe-reports/**
-          ./**/surefire-reports/**
+          **/*.exec
+          **/failsafe-reports/**/*
+          **/surefire-reports/**/*
         key: ${{ inputs.jacoco-cache-key }}
         restore-keys: ${{ inputs.jacoco-cache-restore-key }}
 
