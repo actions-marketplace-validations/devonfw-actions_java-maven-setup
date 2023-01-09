@@ -63,6 +63,7 @@ runs:
         path: ~/.m2/repository
         key: ${{ inputs.maven-cache-key }}
         restore-keys: ${{ inputs.maven-cache-restore-key }}
+        enableCrossOsArchive: true
         
     - name: Restore jacoco test coverage data
       if: inputs.jacoco-cache-key != ''
@@ -74,6 +75,7 @@ runs:
           **/surefire-reports/**/*
         key: ${{ inputs.jacoco-cache-key }}
         restore-keys: ${{ inputs.jacoco-cache-restore-key }}
+        enableCrossOsArchive: true
 
     - name: Set up OpenJDK
       if: inputs.java-version != ''
