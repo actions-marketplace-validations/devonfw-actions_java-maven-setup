@@ -59,6 +59,14 @@ runs:
       if: ${{ runner.os == 'Windows' }}
       shell: cmd
       run: git config --system core.longpaths true
+      
+    - name: Clone Repository
+      if: inputs.clone == 'true'
+      uses: actions/checkout@v3
+      with:
+        repository: ${{ inputs.repository }}
+        path: ${{ inputs.repository_path }}
+        token: ${{ inputs.git_token }}
         
     - name: Restore m2 repository
       if: inputs.maven-cache-key != ''
@@ -87,14 +95,6 @@ runs:
       with:
         java-version: ${{ inputs.java-version }}
         distribution: adopt
-    
-    - name: Clone Repository
-      if: inputs.clone == 'true'
-      uses: actions/checkout@v3
-      with:
-        repository: ${{ inputs.repository }}
-        path: ${{ inputs.repository_path }}
-        token: ${{ inputs.git_token }}
 
     - name: Import GPG key
       uses: crazy-max/ghaction-import-gpg@v4
