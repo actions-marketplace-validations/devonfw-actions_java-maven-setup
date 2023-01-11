@@ -7,6 +7,10 @@ inputs:
   maven-cache-restore-key:
     description: 'Cache restore key for maven repository'
     required: false
+  maven-cache-path:
+    description: 'Maven repository path to be cached'
+    default: ~/.m2/repository
+    required: false
   jacoco-cache-key:
     description: 'Cache key for jacoco and test execution data'
     required: false
@@ -60,7 +64,7 @@ runs:
       if: inputs.maven-cache-key != ''
       uses: actions/cache@v3
       with:
-        path: ~/.m2/repository
+        path: ${{ inputs.maven-cache-path }}
         key: ${{ inputs.maven-cache-key }}
         restore-keys: ${{ inputs.maven-cache-restore-key }}
         enableCrossOsArchive: true
